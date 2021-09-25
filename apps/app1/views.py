@@ -26,7 +26,7 @@ def index(req):
 @api_view(['GET'])
 def get_all(req):
     res = Blog.objects.all()
-    # res = serialize('json', res)
-    # res = json.loads(res)
+    res = serialize('json',res)
+    res = json.loads(res)
     res = [ x['fields'] for x in res ] 
-    return JsonResponse("res", safe=False)
+    return JsonResponse(res, safe=False)
