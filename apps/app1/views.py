@@ -16,7 +16,7 @@ from django import db
 def index(req):
     if req.method == 'GET':
         a = db.connection.settings_dict["ENGINE"]
-        return JsonResponse('You can POST to this URL to save your message. Acceptable format: {"title":"YourTitle" , "body":"Your Text Body"} to see all records see /getall', safe=False)
+        return JsonResponse('You can POST to this URL to save your message. Acceptable format: {title:YourTitle , body:Your Text Body} to see all records see /getall', safe=False)
     body = json.loads(req.body)
     title = body['title']
     text = body['body']
@@ -32,4 +32,4 @@ def get_all(req):
     res = json.loads(res)
     res = [ x['fields'] for x in res ]
     db_name = db.connection.settings_dict["ENGINE"]
-    return JsonResponse({"database": db_name, "data": res}, safe=False)
+    return JsonResponse({"db.connection.settings_dict['ENGINE']": db_name, "data": res}, safe=False)
