@@ -12,12 +12,19 @@ from django.core.serializers import serialize
 
 @api_view(['POST', 'GET'])
 def index(req):
-    return JsonResponse(json.loads(req.body))
+    
+    body = json.loads(req.body)
+    title = body['title']
+    text = body['body']
+    b = Blog(title=title, body=text)
+    b.save()
+    return JsonResponse("SAVED", safe=False)
 
 
 @api_view(['GET'])
 def get_all(req):
     res = Blog.objects.all()
     res = serialize('json', res)
+    res = json.loads(res)
     print(res)
-    return JsonResponse({"YES":"IT IS RESPONSE"}, safe=False)
+    return JsonResponse(res, safe=False)
