@@ -7,14 +7,16 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from .models import Blog
 from django.core.serializers import serialize
-
+import os
+from django import db
 # Create your views here.
 
 
 @api_view(['POST', 'GET'])
 def index(req):
     if req.method == 'GET':
-        return HttpResponse('You can POST to this URL to save your message. \n acceptale format: {"title":"YourTitle" , "body":"Your Text Body"} \n to see all records see /getall ')
+        a = db.connection.settings_dict["ENGINE"]
+        return JsonResponse('You can POST to this URL to save your message. Acceptable format: {"title":"YourTitle" , "body":"Your Text Body"} to see all records see /getall', safe=False)
     body = json.loads(req.body)
     title = body['title']
     text = body['body']
@@ -28,5 +30,6 @@ def get_all(req):
     res = Blog.objects.all()
     res = serialize('json',res)
     res = json.loads(res)
-    res = [ x['fields'] for x in res ] 
-    return JsonResponse(res, safe=False)
+    res = [ x['fields'] for x in res ]
+    db_name = db.connection.settings_dict["ENGINE"]
+    return JsonResponse({"database": db_name, "data": res}, safe=False)
